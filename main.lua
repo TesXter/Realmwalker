@@ -12,7 +12,7 @@ local enabled = false
 local function is_hatetide_quest_active()
     local quests = get_quests()
     for _, quest in pairs(quests) do
-        if quest:get_name():find("SME_Hatetide_ActivityPlayerQuest") then
+        if quest:get_name():find("SME_Hatetide_ActivityPlayerQuest") or quest:get_name():find("ZE_Hatetide") then
             return true
         end
     end
