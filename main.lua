@@ -2,16 +2,13 @@ local gui = require("gui")
 
 -- Get the local player
 local local_player = get_local_player()
-if local_player == nil then
-    return
-end
+if not local_player then return end
 
 local enabled = false
 
 -- Function to check if the Hatetide quest is active
 local function is_hatetide_quest_active()
-    local quests = get_quests()
-    for _, quest in pairs(quests) do
+    for _, quest in pairs(get_quests()) do
         if quest:get_name():find("SME_Hatetide_ActivityPlayerQuest") or quest:get_name():find("ZE_Hatetide") then
             return true
         end
@@ -32,11 +29,20 @@ local function move_and_interact(actor, interaction_distance)
     if distance > interaction_distance then
         evade(actor_position)
         pathfinder.request_move(actor_position)
-    end
-    
-    if distance <= interaction_distance then
+    elseif distance <= interaction_distance then
         interact_object(actor)
     end
+end
+
+-- Function to check if the player has a specific buff
+local function is_player_has_buff(buff_name)
+    local buffs = local_player:get_buffs()
+    for _, buff in pairs(buffs) do
+        if buff:name() == buff_name then
+            return true
+        end
+    end
+    return false
 end
 
 -- Main update function
@@ -58,6 +64,10 @@ on_update(function()
                     move_and_interact(actor, 3)
                 elseif name:find("ACD_Switch_S06") then
                     -- Interact with portal before beginning
+                    if is_player_has_buff("S06_Realmwalker_GizmoSummonMonster") then
+                        return
+                    end
+
                     move_and_interact(actor, 3)
                 end
             end
