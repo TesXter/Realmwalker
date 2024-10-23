@@ -19,33 +19,45 @@ local function is_hatetide_quest_active()
     return false
 end
 
+-- Function to evade to a specific position
+local function evade(position)
+    cast_spell.position(337031, position, 3.0)
+end
+
+-- Function to move towards and interact with an actor
+local function move_and_interact(actor, interaction_distance)
+    local actor_position = actor:get_position()
+    local distance = get_player_position():dist_to_ignore_z(actor_position)
+    
+    if distance > interaction_distance then
+        evade(actor_position)
+        pathfinder.request_move(actor_position)
+    end
+    
+    if distance <= interaction_distance then
+        interact_object(actor)
+    end
+end
+
 -- Main update function
 on_update(function()
     enabled = gui.elements.main_toggle:get()
 
     if enabled and is_hatetide_quest_active() then
         local actors = actors_manager.get_all_actors()
+        
         for _, actor in pairs(actors) do
             local name = actor:get_skin_name()
-            local distance = get_player_position():dist_to_ignore_z(actor:get_position())
             
             if name == "RealmWalker_portal" then
                 -- Follow Realmwalker
-                if distance > 7 then  
-                    pathfinder.request_move(actor:get_position())
-                end
+                move_and_interact(actor, 7)
             elseif name:find("S06_Realmwalker_Portal_Generic") then
                 -- Interact with portal after Realmwalker dies
-                if distance > 3 then
-                    pathfinder.request_move(actor:get_position())
-                end
-                interact_object(actor)
-            elseif name:find("ACD_") then
+                move_and_interact(actor, 3)
+            elseif name:find("ACD_Switch_S06") then
                 -- Interact with portal before beginning
-                if distance > 3 then
-                    pathfinder.request_move(actor:get_position())
-                end
-                interact_object(actor)
+                move_and_interact(actor, 3)
             end
         end
     end
