@@ -43,21 +43,23 @@ end
 on_update(function()
     enabled = gui.elements.main_toggle:get()
 
-    if enabled and is_hatetide_quest_active() then
-        local actors = actors_manager.get_all_actors()
+    if enabled then
+        if is_hatetide_quest_active() then
+            local actors = actors_manager.get_all_actors()
         
-        for _, actor in pairs(actors) do
-            local name = actor:get_skin_name()
-            
-            if name == "RealmWalker_portal" then
-                -- Follow Realmwalker
-                move_and_interact(actor, 7)
-            elseif name:find("S06_Realmwalker_Portal_Generic") then
-                -- Interact with portal after Realmwalker dies
-                move_and_interact(actor, 3)
-            elseif name:find("ACD_Switch_S06") then
-                -- Interact with portal before beginning
-                move_and_interact(actor, 3)
+            for _, actor in pairs(actors) do
+                local name = actor:get_skin_name()
+                
+                if name == "RealmWalker_portal" then
+                    -- Follow Realmwalker
+                    move_and_interact(actor, 7)
+                elseif name:find("S06_Realmwalker_Portal_Generic") then
+                    -- Interact with portal after Realmwalker dies
+                    move_and_interact(actor, 3)
+                elseif name:find("ACD_Switch_S06") then
+                    -- Interact with portal before beginning
+                    move_and_interact(actor, 3)
+                end
             end
         end
     end
