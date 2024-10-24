@@ -1,6 +1,6 @@
 local Scos = {}
 
-local point = {
+Scos.point = {
     vec3:new(16.174805, 40.510742, 0.048828),
     vec3:new(16.121546, 37.931446, 0.048828),
     vec3:new(16.158573, 35.342846, 0.166013),
@@ -47,7 +47,7 @@ local point = {
     vec3:new(78.573524, -15.816365, -0.395508),
 }
 
-local point_2 = {
+Scos.point_2 = {
     vec3:new(41.302734, 16.290039, 1.050781),
     vec3:new(38.224972, 16.275391, 1.001613),
     vec3:new(35.147297, 16.176962, 1.166287),
@@ -89,30 +89,5 @@ local point_2 = {
     vec3:new(73.880264, -16.503063, -0.469726),
     vec3:new(76.960274, -16.269535, -0.396037),
 }
-
-local total_step = 0
-local current_step = 0
-local use_point = false
-
-function Scos.running(player_position)
-
-    if current_step == 0 then
-        if player_position:dist_to_ignore_z(point[1]) < 1 then
-            use_point = point
-        else
-            use_point = point_2
-        end
-    end
-
-    total_step = #use_point
-
-    if current_step < total_step and use_point ~= false then
-        pathfinder.request_move(use_point[current_step+1])
-        if player_position:dist_to_ignore_z(use_point[current_step+1]) < 1 then
-            current_step = current_step + 1
-            console.print("Moving to " .. current_step)
-        end
-    end
-end
 
 return Scos
