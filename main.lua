@@ -4,6 +4,10 @@ local gui = require("gui")
 local local_player = get_local_player()
 if not local_player then return end
 
+local last_tick_time = get_time_since_inject()
+local time_to_work = 5
+local work_time = time_to_work
+
 local enabled = false
 
 -- Function to check if the Hatetide quest is active
@@ -50,6 +54,22 @@ on_update(function()
     enabled = gui.elements.main_toggle:get()
 
     if enabled then
+
+        -- Get the current time
+        local current_time = get_time_since_inject()
+
+        -- Check if one second has passed
+        if current_time - last_tick_time >= 1 then
+            -- Update the last tick time
+            last_tick_time = current_time
+
+            -- Code to execute every second
+            work_time = work_time - 1
+            if work_time <= 0 then
+                work_time = time_to_work
+            end
+        end
+
         if is_hatetide_quest_active() then
             local actors = actors_manager.get_all_actors()
         
@@ -58,7 +78,9 @@ on_update(function()
                 
                 if name == "RealmWalker_portal" then
                     -- Follow Realmwalker
-                    move_and_interact(actor, 7)
+                    if work_time == 5 then  
+                        move_and_interact(actor, 7)
+                    end
                 elseif name:find("S06_Realmwalker_Portal_Generic") then
                     -- Interact with portal after Realmwalker dies
                     move_and_interact(actor, 3)
