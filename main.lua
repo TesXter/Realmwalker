@@ -53,7 +53,7 @@ end
 
 local function run_in_dungeon(player_position)
     local zone_name = world.get_current_world():get_current_zone_name()
-    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" then
+    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" then
         GoRealmgate.running(player_position, zone_name)
     end
 end

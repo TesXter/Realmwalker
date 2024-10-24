@@ -1,5 +1,6 @@
 local Scos = require("dungeon.waypoints.scos")
 local Step = require("dungeon.waypoints.step")
+local Frac = require("dungeon.waypoints.frac")
 
 local GoRealmgate = {}
 
@@ -10,11 +11,6 @@ local previous_zone_name = ""
 
 -- Main function to handle player movement towards realm gate
 function GoRealmgate.running(player_position, zone_name)
-    -- Reset current_step if a new zone is entered
-    if current_step == 0 or zone_name ~= previous_zone_name then
-        current_step = 0
-        previous_zone_name = zone_name
-    end
 
     -- Determine which set of waypoints to use based on the zone
     if current_step == 0 then
@@ -22,13 +18,20 @@ function GoRealmgate.running(player_position, zone_name)
             -- Choose the closest waypoint set in Scos
             if player_position:dist_to_ignore_z(Scos.point[1]) < 2 then
                 use_point = Scos.point
-            else
+            elseif player_position:dist_to_ignore_z(Scos.point_2[1]) < 2 then
                 use_point = Scos.point_2
+            else
+                use_point = Scos.point_3
             end
         elseif zone_name == "S06_Step_RealmWalkerDungeonOfHatred" then
             -- Choose the waypoint set in Step
             if player_position:dist_to_ignore_z(Step.point[1]) < 2 then
                 use_point = Step.point
+            end
+        elseif zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" then
+            -- Choose the waypoint set in Step
+            if player_position:dist_to_ignore_z(Frac.point[1]) < 2 then
+                use_point = Frac.point
             end
         end
     end
@@ -45,10 +48,6 @@ function GoRealmgate.running(player_position, zone_name)
                 current_step = current_step + 1
                 console.print("Moving to " .. current_step)
             end
-        else
-            -- Reset for next use
-            current_step = 0
-            use_point = false
         end
     else
         -- console.print("use_point is false (wait for update)")
