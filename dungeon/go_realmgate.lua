@@ -27,6 +27,8 @@ function GoRealmgate.running(player_position, zone_name)
             -- Choose the waypoint set in Step
             if player_position:dist_to_ignore_z(Step.point[1]) < 2 then
                 use_point = Step.point
+            elseif player_position:dist_to_ignore_z(Step.point_2[1]) < 2 then
+                use_point = Step.point_2
             end
         elseif zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" then
             -- Choose the waypoint set in Step
