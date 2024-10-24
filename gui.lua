@@ -11,7 +11,7 @@ gui.elements = {
 }
 
 function gui.render()
-    if not gui.elements.main_tree:push("Realmwalker 0.1") then return end
+    if not gui.elements.main_tree:push("Realmwalker 0.2") then return end
 
     gui.elements.main_toggle:render("Enable", "")
     if not gui.elements.main_toggle:get() then

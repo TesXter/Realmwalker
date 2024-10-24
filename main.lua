@@ -1,4 +1,5 @@
 local gui = require("gui")
+local Scos = require("dungeon.scos")
 
 -- Get the local player
 local local_player = get_local_player()
@@ -13,7 +14,8 @@ local enabled = false
 -- Function to check if the Hatetide quest is active
 local function is_hatetide_quest_active()
     for _, quest in pairs(get_quests()) do
-        if quest:get_name():find("SME_Hatetide_ActivityPlayerQuest") or quest:get_name():find("ZE_Hatetide") then
+        local quest_name = quest:get_name() 
+        if quest_name:find("SME_Hatetide_ActivityPlayerQuest") or quest_name:find("ZE_Hatetide") or quest_name:find("RealmWalkerDungeonOfHatred") then
             return true
         end
     end
@@ -49,6 +51,13 @@ local function is_player_has_buff(buff_name)
     return false
 end
 
+local function run_in_dungeon(player_position)
+    local zone_name = world.get_current_world():get_current_zone_name()
+    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" then
+        Scos.running(player_position)
+    end
+end
+
 -- Main update function
 on_update(function()
     enabled = gui.elements.main_toggle:get()
@@ -68,9 +77,14 @@ on_update(function()
             if work_time <= 0 then
                 work_time = time_to_work
             end
+
         end
 
         if is_hatetide_quest_active() then
+
+            local player_position = get_player_position()
+            run_in_dungeon(player_position)
+
             local actors = actors_manager.get_all_actors()
         
             for _, actor in pairs(actors) do
