@@ -54,14 +54,15 @@ end
 
 local function run_in_dungeon(player_position)
     local zone_name = world.get_current_world():get_current_zone_name()
-    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" or zone_name == "S06_Kehj_RealmWalkerDungeonOfHatred" then
-        -- GoRealmgate.running(player_position, zone_name)
-        Explore.run(player_position)
+    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" or zone_name == "S06_Kehj_RealmWalkerDungeonOfHatred" or zone_name == "S06_Hawe_RealmWalkerDungeonOfHatred" then
+        Explore.run()
     end
 end
 
 -- Main update function
 on_update(function()
+    
+    -- Explore.run()
     enabled = gui.elements.main_toggle:get()
 
     if enabled then
@@ -84,7 +85,7 @@ on_update(function()
 
         if is_hatetide_quest_active() then
 
-            local player_position = get_player_position()
+            -- local player_position = get_player_position()
             run_in_dungeon(player_position)
 
             local actors = actors_manager.get_all_actors()
@@ -94,7 +95,7 @@ on_update(function()
                 
                 if name == "RealmWalker_portal" then
                     -- Follow Realmwalker
-                    if work_time == 5 then  
+                    if work_time >= 2 and work_time <= 5 then  
                         move_and_interact(actor, 7)
                     end
                 elseif name:find("S06_Realmwalker_Portal_Generic") then
