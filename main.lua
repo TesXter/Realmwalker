@@ -1,5 +1,6 @@
 local gui = require("gui")
 local GoRealmgate = require("dungeon.go_realmgate")
+local Explore = require("dungeon.explore")
 
 -- Get the local player
 local local_player = get_local_player()
@@ -53,13 +54,15 @@ end
 
 local function run_in_dungeon(player_position)
     local zone_name = world.get_current_world():get_current_zone_name()
-    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" then
-        GoRealmgate.running(player_position, zone_name)
+    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" or zone_name == "S06_Kehj_RealmWalkerDungeonOfHatred" or zone_name == "S06_Hawe_RealmWalkerDungeonOfHatred" then
+        Explore.run()
     end
 end
 
 -- Main update function
 on_update(function()
+    
+    -- Explore.run()
     enabled = gui.elements.main_toggle:get()
 
     if enabled then
@@ -82,7 +85,7 @@ on_update(function()
 
         if is_hatetide_quest_active() then
 
-            local player_position = get_player_position()
+            -- local player_position = get_player_position()
             run_in_dungeon(player_position)
 
             local actors = actors_manager.get_all_actors()
