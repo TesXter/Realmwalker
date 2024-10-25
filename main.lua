@@ -92,7 +92,7 @@ on_update(function()
                 
                 if name == "RealmWalker_portal" then
                     -- Follow Realmwalker
-                    if work_time >= 3 and work_time <= 5 then  
+                    if work_time >= 2 and work_time <= 5 then  
                         move_and_interact(actor, 7)
                     end
                 elseif name:find("S06_Realmwalker_Portal_Generic") then
