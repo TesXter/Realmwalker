@@ -1,5 +1,6 @@
 local gui = require("gui")
 local GoRealmgate = require("dungeon.go_realmgate")
+local Explore = require("dungeon.explore")
 
 -- Get the local player
 local local_player = get_local_player()
@@ -53,8 +54,9 @@ end
 
 local function run_in_dungeon(player_position)
     local zone_name = world.get_current_world():get_current_zone_name()
-    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" then
-        GoRealmgate.running(player_position, zone_name)
+    if zone_name == "S06_Scos_RealmWalkerDungeonOfHatred" or zone_name == "S06_Step_RealmWalkerDungeonOfHatred" or zone_name == "S06_Frac_RealmWalkerDungeonOfHatred" or zone_name == "S06_Kehj_RealmWalkerDungeonOfHatred" then
+        -- GoRealmgate.running(player_position, zone_name)
+        Explore.run(player_position)
     end
 end
 
