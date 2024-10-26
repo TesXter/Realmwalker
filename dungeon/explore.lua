@@ -704,15 +704,14 @@ local function reach_objective()
         if distance > 2 then
             pathfinder.request_move(objective:get_position())
         elseif distance < 2 then
-            if not interact_objective and not interact_chest then
+            if not interact_objective and objective_type == "altar" then
                 console.print("Interacting with " .. objective_type)
                 interact_object(objective)
-            end
-            if objective_type == "altar" then
                 interact_objective = true
-            elseif objective_type == "chest" then
+            elseif not interact_chest and objective_type == "chest" then
+                console.print("Interacting with " .. objective_type)
+                interact_object(objective)
                 interact_chest = true
-                interact_objective = true
             end
             return true
         end
