@@ -73,11 +73,11 @@ end
 local Explore = {}
 local explored_areas = {}
 local target_position = nil
-local grid_size = 1.5  -- Updated grid_size calculation
+local grid_size = 1.5  -- Grid size for pathfinding and exploration
 local exploration_radius = 16   -- Radius in which areas are considered explored
 local explored_buffer = 2      -- Buffer around explored areas in meters
 local max_target_distance = 120 -- Maximum distance for a new target
-local target_distance_states = {120, 40, 20, 5}
+local target_distance_states = {120, 40, 20, 5}  -- Different distance states for adaptive exploration
 local target_distance_index = 1
 local unstuck_target_distance = 15 -- Maximum distance for an unstuck target
 local stuck_threshold = 4      -- Seconds before the character is considered "stuck"
@@ -86,10 +86,10 @@ local last_move_time = 0
 local last_explored_targets = {}
 local max_last_targets = 50
 
--- Replace the rectangular explored_area_bounds with a table of explored circles
+-- Replace rectangular explored_area_bounds with a table of explored circles
 local explored_circles = {}
 
--- Add these new variables at the top of the file
+-- Variables for circle creation timing and positioning
 local last_circle_position = nil
 local last_circle_time = 0
 local min_distance_between_circles = 16  -- Distance in units
@@ -99,13 +99,13 @@ local min_time_between_circles = 5  -- Minimum time in seconds between circle cr
 local current_path = {}
 local path_index = 1
 
--- Explorationsmodus
-local exploration_mode = "unexplored" -- "unexplored" oder "explored"
+-- Exploration mode: "unexplored" or "explored"
+local exploration_mode = "unexplored"
 
--- Richtung für den "explored" Modus
-local exploration_direction = { x = 10, y = 0 } -- Initiale Richtung (kann angepasst werden)
+-- Direction for the "explored" mode
+local exploration_direction = { x = 10, y = 0 } -- Initial direction (can be adjusted)
 
--- Neue Variable für die letzte Bewegungsrichtung
+-- Variable for the last movement direction
 local last_movement_direction = nil
 
 --ai fix for kill monsters path
@@ -692,8 +692,7 @@ local interact_objective = false
 local interact_chest = false
 
 local function reach_objective()
-
-    if interact_objective or interact_chest then
+    if interact_objective and interact_chest then
         return true
     end
 
@@ -701,27 +700,24 @@ local function reach_objective()
     if objective then
         local player_pos = get_player_position()
         local distance = calculate_distance(player_pos, objective:get_position())
+        
         if distance > 2 then
             pathfinder.request_move(objective:get_position())
-        end
-        if not interact_objective and not interact_chest then
-            if distance <= 2 then       
-                console.print("Interacting with " .. objective_type) 
+        elseif distance < 2 then
+            if not interact_objective and not interact_chest then
+                console.print("Interacting with " .. objective_type)
                 interact_object(objective)
-                interact_object(objective)
-                interact_object(objective)
-                interact_object(objective)
-                interact_object(objective)
-                if objective_type == "altar" then
-                    interact_objective = true
-                elseif objective_type == "chest" then
-                    interact_chest = true
-                end
             end
+            if objective_type == "altar" then
+                interact_objective = true
+            elseif objective_type == "chest" then
+                interact_chest = true
+                interact_objective = true
+            end
+            return true
         end
-
-        return true
     end
+
     return false
 end
 
@@ -765,7 +761,16 @@ local function move_to_target()
             last_path_recalculation = current_time
         end
 
-        local next_point = current_path[path_index]
+        local next_point
+        if current_path and path_index and current_path[path_index] then
+            next_point = current_path[path_index]
+        else
+            console.print("Invalid path or index, resetting path")
+            path_index = 1
+            current_path = nil
+            target_position = find_target(false)
+            return
+        end
         if next_point and not next_point:is_zero() then
             pathfinder.request_move(next_point)
         end
@@ -945,15 +950,6 @@ local function check_and_create_circle()
     else
         console.print("Not enough distance or time has passed to create a new circle")
     end
-end
-
--- This function should be called in your main update loop
-function Explore.update()
-    -- ... other update logic ...
-    
-    check_and_create_circle()
-    
-    -- ... rest of the update logic ...
 end
 
 function Explore.clear_explored_circles()

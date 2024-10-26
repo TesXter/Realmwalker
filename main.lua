@@ -1,5 +1,4 @@
 local gui = require("gui")
-local GoRealmgate = require("dungeon.go_realmgate")
 local Explore = require("dungeon.explore")
 
 -- Get the local player
