@@ -84,7 +84,7 @@ on_update(function()
 
         if is_hatetide_quest_active() then
 
-            -- local player_position = get_player_position()
+            local player_position = get_player_position()
             run_in_dungeon(player_position)
 
             local actors = actors_manager.get_all_actors()
@@ -97,7 +97,7 @@ on_update(function()
                     if work_time >= 2 and work_time <= 5 then  
                         move_and_interact(actor, 7)
                     end
-                elseif name:find("S06_Realmwalker_Portal_Generic") then
+                elseif name:find("S06_Realmwalker_eventEnd_dungeonEntrance_Portal") then
                     -- Interact with portal after Realmwalker dies
                     move_and_interact(actor, 3)
                 elseif name:find("ACD_Switch_S06") then
